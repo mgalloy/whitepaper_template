@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+
+# Usage:
+#
+#   make_whitepaper dir title
+#
+# For example:
+#
+#   make_whitepaper ~/proposals/tomography-with-gpulib "Tomography with GPULib"
+
+# give help if no arguments
+if [ $# -ne 2 ]; then
+  echo "syntax: make_whitepaper dir title"
+  exit 1
+fi
+
+  
+# setup from command line arguments
+DIR=$1
+LOCATION=`dirname $0`
+FILENAME=`basename $1`
+TITLE=$2
+
+# create output directory if doesn't exist already
+if [ ! -d $DIR ]; then 
+  echo "Creating $DIR"
+  mkdir -p $DIR
+fi
+
+# substitute WHITEPAPER_TITLE into Makefile
+sed -e "s/WHITEPAPER_TITLE/${FILENAME}/" $LOCATION/Makefile > $DIR/Makefile
+sed -e "s/WHITEPAPER_TITLE/${TITLE}/" $LOCATION/whitepaper.rst > $DIR/${FILENAME}.rst
+sed -e "s/WHITEPAPER_TITLE/${TITLE}/" $LOCATION/whitepaper.sty > $DIR/${FILENAME}.sty
+sed -e "s/WHITEPAPER_TITLE/${FILENAME}/" $LOCATION/gitignore > $DIR/.gitignore
